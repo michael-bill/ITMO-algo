@@ -9,6 +9,7 @@ def compile_cpp_file():
         print("Compilation successful.")
     except subprocess.CalledProcessError:
         print("Compilation failed.")
+        exit()
 
 def run_tests():
     try:
