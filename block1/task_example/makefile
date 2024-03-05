@@ -3,6 +3,6 @@ run: main.cpp
 	./tests/main
 
 test:
-	echo "./block1/task_example/" | python3 ../../tester.py
+	pwd | python3 ../../tester.py
 
 .PHONY: run test
