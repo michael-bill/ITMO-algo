@@ -32,7 +32,7 @@ def run_tests():
                     print("Actual Output:")
                     print(actual_output.strip())
     except FileNotFoundError:
-        print("Input or output files not found.")
+        print(Fore.RED + "Input or output files not found.")
 
 if __name__ == "__main__":
     compile_cpp_file()
