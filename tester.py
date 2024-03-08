@@ -23,6 +23,7 @@ def run_tests():
 
                 process = subprocess.Popen('tests/main', stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
                 actual_output, _ = process.communicate(test_input)
+                print(Fore.RESET + "-")
                 if actual_output.strip() == expected_output.strip():
                     print(Fore.GREEN + f"Test {test_number}: Passed")
                 else:
