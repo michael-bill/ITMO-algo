@@ -1,11 +1,6 @@
 #include <iostream>
 #include <stack>
 
-int32_t to_lower(int32_t s);
-int32_t to_upper(int32_t s);
-bool is_lower(int32_t s);
-bool is_upper(int32_t s);
-
 // Либо животное, либо ловушка
 // type - код символа
 // number - порядковый номер в строке
@@ -27,9 +22,9 @@ int main(int argc, char** argv) {
     for (size_t i  = 0; i < line.size(); i++) {
         int32_t s = line[i];
         // В случае, если животное
-        if (is_lower(s)) {
+        if (islower(s)) {
             animals_counter++;
-            int32_t trap = to_upper(s);
+            int32_t trap = toupper(s);
             if (!zoo_objects.empty() && zoo_objects.top().type == trap) {
                 trapped_animals[zoo_objects.top().number] = animals_counter;
                 zoo_objects.pop();
@@ -38,9 +33,9 @@ int main(int argc, char** argv) {
                 zoo_objects.push(a);
             }
         // В случае, если ловушка
-        } else if (is_upper(s)) {
+        } else if (isupper(s)) {
             traps_counter++;
-            int32_t animal = to_lower(s);
+            int32_t animal = tolower(s);
             if (!zoo_objects.empty() && zoo_objects.top().type == animal) {
                 trapped_animals[traps_counter] = zoo_objects.top().number;
                 zoo_objects.pop();
@@ -64,28 +59,4 @@ int main(int argc, char** argv) {
     }
     delete[] trapped_animals;
     return 0;
-}
-
-int32_t to_lower(int32_t s) {
-    if (s >= 'A' && s <= 'Z') {
-        return s - 'A' + 'a';
-    }
-    return s;
-}
-
-int32_t to_upper(int32_t s) {
-    if (s >= 'a' && s <= 'z') {
-        return s - 'a' + 'A';
-    }
-    return s;
-}
-
-bool is_lower(int32_t s) {
-    if (s >= 'a' && s <= 'z') return true;
-    return false;
-}
-
-bool is_upper(int32_t s) {
-    if (s >= 'A' && s <= 'Z') return true;
-    return false;
 }
