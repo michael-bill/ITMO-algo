@@ -5,7 +5,7 @@ init_colorama()
 
 def compile_cpp_file():
     try:
-        subprocess.run(['g++', 'main.cpp', '-o', 'tests/main'], check=True)
+        subprocess.run(['g++', 'main.cpp', '-o', 'tests/main', '-std=c++17'], check=True)
         print("Compilation successful.")
     except subprocess.CalledProcessError:
         print("Compilation failed.")

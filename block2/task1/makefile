@@ -1,5 +1,5 @@
 run: main.cpp
-	g++ main.cpp -o tests/main
+	g++ main.cpp -o tests/main -std=c++17
 	./tests/main
 
 test:
