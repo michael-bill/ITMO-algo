@@ -1,5 +1,6 @@
 import subprocess
 import os
+import time
 from colorama import init as init_colorama, Fore
 init_colorama()
 
@@ -21,13 +22,17 @@ def run_tests():
                 test_input = input_file.read().strip()
                 expected_output = output_file.read().strip()
 
+                start_time = time.time() * 1000
                 process = subprocess.Popen('tests/main', stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+                end_time = time.time() * 1000
+                exec_time = end_time - start_time
+
                 actual_output, _ = process.communicate(test_input)
                 print(Fore.RESET + "-")
                 if actual_output.strip() == expected_output.strip():
-                    print(Fore.GREEN + f"Test {test_number}: Passed")
+                    print(Fore.GREEN + f"Test {test_number}: Passed in {exec_time:.5f} ms")
                 else:
-                    print(Fore.RED + f"Test {test_number}: Failed")
+                    print(Fore.RED + f"Test {test_number}: Failed in {exec_time:5.f} ms")
                     print("Expected Output:")
                     print(expected_output.strip())
                     print("Actual Output:")
