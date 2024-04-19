@@ -21,18 +21,18 @@ def run_tests():
             with open(f'tests/input/{test_input_file}') as input_file, open(test_output_file) as output_file:
                 test_input = input_file.read().strip()
                 expected_output = output_file.read().strip()
+                process = subprocess.Popen('tests/main', stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
 
                 start_time = time.time() * 1000
-                process = subprocess.Popen('tests/main', stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+                actual_output, _ = process.communicate(test_input)
                 end_time = time.time() * 1000
                 exec_time = end_time - start_time
 
-                actual_output, _ = process.communicate(test_input)
                 print(Fore.RESET + "-")
                 if actual_output.strip() == expected_output.strip():
                     print(Fore.GREEN + f"Test {test_number}: Passed in {exec_time:.5f} ms")
                 else:
-                    print(Fore.RED + f"Test {test_number}: Failed in {exec_time:5.f} ms")
+                    print(Fore.RED + f"Test {test_number}: Failed in {exec_time:.5f} ms")
                     print("Expected Output:")
                     print(expected_output.strip())
                     print("Actual Output:")
