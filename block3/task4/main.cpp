@@ -1,39 +1,35 @@
 #include <iostream>
+#include <deque>
 
-// Нахождение минимального элемента в окне заданного размером k
-int32_t min_in_window(int32_t k, int32_t* arr) {
-    int32_t min = arr[0];
-    for (int32_t i = 1; i < k; i++) {
-        if (arr[i] < min) min = arr[i];
+int main() {
+    using namespace std;
+    int32_t n, k;
+    cin >> n >> k;
+    int32_t arr[n];
+    for (int32_t i = 0; i < n; i++) {
+        cin >> arr[i];
     }
-    return min;
-}
-
-int main(int argc, char** argv) {
-    size_t n, k;
-    std::cin >> n >> k;
-    int32_t arr[k], min, num, last_num;
-    // Заполняем первое окно и считаем первый минимум
-    std::cin >> min;
-    arr[0] = min;
-    for (size_t i = 1; i < k; i++) {
-        std::cin >> num;
-        arr[i] = num;
-        if (min > num) min = num;
-    }
-    std::cout << min << ' ';
-    // Двигаемся по последовательности
-    for (size_t i = k; i < n; i++) {
-        std::cin >> num;
-        last_num = arr[i % k];
-        arr[i % k] = num;
-        // Если новое число меньше минимума в окне, то выводим его
-        if (min >= num) min = num;
-        // Иначе находим новый минимум
-        else if (min == last_num) {
-            min = min_in_window(k, arr);
+    deque<int32_t> nums;
+    // Заполняем deque для первого окна длины k
+    for (int32_t i = 0; i < k; i++) {
+        while (!nums.empty() && arr[i] <= arr[nums.back()]) {
+            nums.pop_back();
         }
-        std::cout << min << ' ';
+        nums.push_back(i);
     }
+    // Печатаем минимумы и обновляем deque при сдвиге окна
+    for (int32_t i = k; i < n; i++) {
+        cout << arr[nums.front()] << ' ';
+        // Удаляем индексы элементов, которые больше не в окне
+        while (!nums.empty() && nums.front() <= i - k) {
+            nums.pop_front();
+        }
+        // Удаляем индексы элементов, которые больше не могут быть минимумами
+        while (!nums.empty() && arr[i] <= arr[nums.back()]) {
+            nums.pop_back();
+        }
+        nums.push_back(i);
+    }
+    cout << arr[nums.front()] << endl;
     return 0;
 }
