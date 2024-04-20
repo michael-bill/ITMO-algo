@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 
+// Блок памяти
 struct block {
     int64_t start;
     int64_t end;
@@ -43,7 +44,7 @@ int main(int argc, char** argv) {
             int64_t block_size = query;
             // Поиск блока из освобождённых, в который можно влезть
             auto it = size_block.lower_bound(block_size);
-            if (block_size <= it->first) {
+            if (it != size_block.end() && block_size <= it->first) {
                 // Найден блок, который подходит по размеру
                 block b = it->second;
                 // Удаляем его из освобождённых блоков
