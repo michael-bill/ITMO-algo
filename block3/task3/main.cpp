@@ -76,30 +76,30 @@ int main(int argc, char** argv) {
             // Убираем блок из занятых
             number_block.erase(number);
 
-            // Находим левый прилегающий блок
-            auto it = start_block.lower_bound(b.start);
-            if (it != start_block.begin()) {
-                it--;
-                block left_b = it->second;
-                if (left_b.end + ((int64_t)1) == b.start) {
-                    // Сливаем блоки
-                    b = { left_b.start, b.end };
-                    // Удаляем левый блок
-                    start_block.erase(left_b.start);
-                    size_block.erase(left_b.end - left_b.start + ((int64_t)1));
-                }
-            }
-
             // Находим правый прилегающий блок
-            it = start_block.upper_bound(b.start);
-            if (it != start_block.end()) {
-                block right_b = it->second;
+            auto it_right = start_block.upper_bound(b.start);
+            if (it_right != start_block.end()) {
+                block right_b = it_right->second;
                 if (b.end + ((int64_t)1) == right_b.start) {
                     // Сливаем блоки
                     b = { b.start, right_b.end };
                     // Удаляем правый блок
                     start_block.erase(right_b.start);
                     size_block.erase(right_b.end - right_b.start + ((int64_t)1));
+                }
+            }
+
+            // Находим левый прилегающий блок
+            auto it_left = start_block.lower_bound(b.start);
+            if (it_left != start_block.begin()) {
+                it_left--;
+                block left_b = it_left->second;
+                if (left_b.end + ((int64_t)1) == b.start) {
+                    // Сливаем блоки
+                    b = { left_b.start, b.end };
+                    // Удаляем левый блок
+                    start_block.erase(left_b.start);
+                    size_block.erase(left_b.end - left_b.start + ((int64_t)1));
                 }
             }
 
