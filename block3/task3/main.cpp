@@ -2,23 +2,24 @@
 #include <map>
 
 struct block {
-    int32_t start;
-    int32_t end;
+    int64_t start;
+    int64_t end;
 };
 
 int main(int argc, char** argv) {
     using namespace std;
     // n - количество ячеек памяти, m - количество запросов
-    int32_t n, m;
+    int64_t n, m;
     cin >> n >> m;
+    if (n == 0 || m == 0) return 0;
     // map номер -> блок, занятые блоки, отсортированные по номеру
-    map<int32_t, block> number_block;
+    map<int64_t, block> number_block;
     // multimap размер -> блок, освобождённые блоки, отсортированные по размеру
-    multimap<int32_t, block> size_block;
+    multimap<int64_t, block> size_block;
     // map начало -> блок, освобождённые блоки, отсортированные по началу
-    map<int32_t, block> start_block;
+    map<int64_t, block> start_block;
 
-    int32_t query;
+    int64_t query;
     cin >> query;
     // Заполняем самый первый блок
     if (query > n) {
@@ -35,14 +36,14 @@ int main(int argc, char** argv) {
         start_block[query + 1] = { query + 1, n };
     }
 
-    for (int32_t i = 2; i <= m; i++) {
+    for (int64_t i = 2; i <= m; i++) {
         cin >> query;
         // Запрос на выделение памяти
         if (query > 0) {
-            int32_t block_size = query;
+            int64_t block_size = query;
             // Поиск блока из освобождённых, в который можно влезть
             auto it = size_block.lower_bound(block_size);
-            if (block_size <= it->first) {
+            if (it != size_block.end() && block_size <= it->first) {
                 // Найден блок, который подходит по размеру
                 block b = it->second;
                 // Удаляем его из освобождённых блоков
@@ -56,7 +57,7 @@ int main(int argc, char** argv) {
                     // Добавляем оставшуюся часть блока в блоки, отсортированные по началу
                     start_block[b.start + block_size] = { b.start + block_size, b.end };
                 }
-                // Обновляем информацию о выделенном блоке
+                // Выделяем блок
                 number_block[i] = { b.start, b.start + block_size - 1 }; 
                 // Выводим номер первой ячейки памяти в выделенном блоке
                 cout << b.start << endl;
@@ -67,14 +68,14 @@ int main(int argc, char** argv) {
         }
         // Если запрос на освобождение памяти
         else if (query < 0) {
-            int32_t number = -query;
+            int64_t number = -query;
             block b = number_block[number];
             // Убираем блок из занятых
             number_block.erase(number);
 
             // Находим левый прилегающий блок
             auto it = start_block.lower_bound(b.start);
-            if (it != start_block.begin()) {
+            if (it != start_block.begin() && it != start_block.end()) {
                 it--;
                 block left_b = it->second;
                 if (left_b.end + 1 == b.start) {
