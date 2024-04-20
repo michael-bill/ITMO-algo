@@ -22,16 +22,12 @@ int main() {
         car = requests.front();
         // Если машинка уже не лежит на полу
         if (on_floor.count(car) == 0) {
-            if (on_floor.size() < k) {
-                // Если на полу меньше K машинок, просто ставим новую
-                on_floor.insert(car);
-                res++;
-            } else {
-                // Иначе, убираем одну из имеющихся машинок и ставим новую
+            if (on_floor.size() >= k) {
+                // Если на полу уже больше чем k машинок, то одну убираем
                 on_floor.erase(on_floor.begin());
-                on_floor.insert(car);
-                res++;
             }
+            on_floor.insert(car);
+            res++;
         }
         requests.pop();
     }
