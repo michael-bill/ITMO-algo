@@ -113,23 +113,23 @@ int main(int argc, char** argv) {
         if (query > 0) {
             int32_t block_size = query;
             // Поиск блока из освобождённых, в который можно влезть
-            auto it = size_block.lower_bound(block_size);
-            if (it != size_block.end()) {
+            auto pair = size_block.rbegin();
+            if (block_size <= pair->first) {
                 // Найден блок, который подходит по размеру
-                block b = it->second;
+                block b = pair->second;
                 // Удаляем его из освобождённых блоков
-                size_block.erase(it);
+                size_block.erase(pair->first);
                 // Удаляем его также из блоков, отсортированных по началу
                 start_block.erase(b.start);
                 // Разбиваем блок на две части, если блок больше запрашиваемого размера
-                if (b.end - b.start > block_size) {
+                if (b.end - b.start + 1 > block_size) {
                     // Добавляем оставшуюся часть блока в освобождённые блоки
-                    size_block.insert({ b.end - block_size, {b.start + block_size, b.end} });
+                    size_block.insert({ b.end - b.start + 1 - block_size, { b.start + block_size, b.end } });
                     // Добавляем оставшуюся часть блока в блоки, отсортированные по началу
-                    start_block[b.start + block_size] = {b.start + block_size, b.end};
+                    start_block[b.start + block_size] = { b.start + block_size, b.end };
                 }
                 // Обновляем информацию о выделенном блоке
-                number_block[i] = { b.start, b.start + block_size };
+                number_block[i] = { b.start, b.start + block_size - 1 }; 
                 // Выводим номер первой ячейки памяти в выделенном блоке
                 cout << b.start << endl;
             } else {
@@ -144,7 +144,7 @@ int main(int argc, char** argv) {
             // Убираем блок из занятых
             number_block.erase(number);
             // Добавляем в освобождённые, отсортрированные по размеру
-            size_block.insert({ b.end - b.start, b });
+            size_block.insert({ b.end - b.start + 1, b });
             // Добавляем в освобождённые, отсортрированные по началу
             start_block[b.start] = b;
         }
