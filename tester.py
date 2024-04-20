@@ -14,7 +14,7 @@ def compile_cpp_file():
 
 def run_tests():
     try:
-        for test_input_file in sorted(os.listdir('tests/input')):
+        for test_input_file in sorted(os.listdir('tests/input'), key=lambda x: int(x.split('.')[0])):
             test_number = test_input_file.split('.')[0]
             test_output_file = f"tests/output/{test_number}.txt"
 
@@ -39,6 +39,8 @@ def run_tests():
                     print(actual_output.strip())
     except FileNotFoundError:
         print(Fore.RED + "Input or output files not found.")
+    except ValueError:
+        print(Fore.RED + "Invalid test file names.")
 
 if __name__ == "__main__":
     compile_cpp_file()
