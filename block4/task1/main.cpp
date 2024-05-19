@@ -25,6 +25,14 @@ int get_dur(char cell) {
     return cell == FIELD ? FIELD_DUR : FOREST_DUR;
 }
 
+char reverse_direction(char dir) {
+    if (dir == UP) return DOWN;
+    if (dir == DOWN) return UP;
+    if (dir == LEFT) return RIGHT;
+    if (dir == RIGHT) return LEFT;
+    return '\0';
+}
+
 int main(int argc, char** argv) {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -38,7 +46,7 @@ int main(int argc, char** argv) {
 
     vector<vector<char>> field(n, vector<char>(m));
     vector<vector<int32_t>> dist(n, vector<int32_t>(m, INT32_MAX));
-    vector<vector<string>> directions(n, vector<string>(m, ""));
+    vector<vector<char>> prev_dir(n, vector<char>(m, '\0')); // Stores the direction to reach each cell
 
     for (int32_t i = 0; i < n; i++) {
         for (int32_t j = 0; j < m; j++) {
@@ -66,7 +74,7 @@ int main(int argc, char** argv) {
                 int new_dist = dist[x][y] + get_dur(field[nx][ny]);
                 if (new_dist < dist[nx][ny]) {
                     dist[nx][ny] = new_dist;
-                    directions[nx][ny] = directions[x][y] + dir[i];
+                    prev_dir[nx][ny] = dir[i];
                     q.push({nx, ny});
                 }
             }
@@ -74,9 +82,26 @@ int main(int argc, char** argv) {
     }
 
     int32_t time = dist[dest_x][dest_y];
-    string path = directions[dest_x][dest_y];
-    cout << (time != INT32_MAX ? time : -1) << endl;
-    cout << path << endl;
+    if (time != INT32_MAX) {
+        string path = "";
+        int x = dest_x;
+        int y = dest_y;
+        while (x != start_x || y != start_y) {
+            char direction = prev_dir[x][y];
+            path = direction + path;
+            int dx, dy;
+            if (direction == UP) { dx = 1; dy = 0; }
+            else if (direction == DOWN) { dx = -1; dy = 0; }
+            else if (direction == LEFT) { dx = 0; dy = 1; }
+            else if (direction == RIGHT) { dx = 0; dy = -1; }
+            x += dx;
+            y += dy;
+        }
+        cout << time << endl;
+        cout << path << endl;
+    } else {
+        cout << -1 << endl;
+    }
 
     return 0;
 }
