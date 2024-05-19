@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 
     vector<vector<char>> field(n, vector<char>(m));
     vector<vector<int32_t>> dist(n, vector<int32_t>(m, INT32_MAX));
-    vector<vector<char>> prev_dir(n, vector<char>(m, '\0')); // Stores the direction to reach each cell
+    vector<vector<char>> prev_dir(n, vector<char>(m, '\0'));
 
     for (int32_t i = 0; i < n; i++) {
         for (int32_t j = 0; j < m; j++) {
